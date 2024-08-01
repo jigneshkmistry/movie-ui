@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { Download } from "react-bootstrap-icons";
 
@@ -69,10 +70,12 @@ const ImageInput = () => {
           style={{ display: "none" }}
         />
         {image ? (
-          <img
+          <Image
             src={URL.createObjectURL(image)}
             alt="Uploaded"
             className="uploaded-image"
+            width={260}
+            height={350}
           />
         ) : (
           <div className="image-placeholder">

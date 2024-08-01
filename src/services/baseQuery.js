@@ -1,7 +1,7 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const API_URL =
-  "http://moviea-loadb-argeak75qwek-1845517061.us-east-1.elb.amazonaws.com/api/";
+  "http://moviea-loadb-argeak75qwek-1845517061.us-east-1.elb.amazonaws.com/";
 
 const baseQueryMovies = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({

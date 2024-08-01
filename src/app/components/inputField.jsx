@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, forwardRef } from "react";
+import React, { forwardRef } from "react";
 
 const InputField = forwardRef((props, ref) => {
   return (
@@ -10,5 +10,7 @@ const InputField = forwardRef((props, ref) => {
     </div>
   );
 });
+
+InputField.displayName = "InputField";
 
 export default InputField;
