@@ -28,7 +28,7 @@ const CreateMovie = () => {
     const title = data.title;
     const publishing_year = parseInt(data.publishingYear, 10);
     const poster =
-      "https://en.wikipedia.org/wiki/The_Lost_City_of_Z_%28film%29#/media/File:The_Lost_City_of_Z_(film).png";
+      "https://static.wikia.nocookie.net/jamescameronsavatar/images/1/15/Avatar_poster.jpg/revision/latest/scale-to-width/360?cb=20100103203426";
 
     try {
       const newMovie = {
@@ -37,7 +37,7 @@ const CreateMovie = () => {
         poster,
       };
 
-      await postMovies(newMovie).unwrap();
+      await postMovies({ payload: newMovie }).unwrap();
       enqueueSnackbar("Movie successfully created", { variant: "success" });
       router.push("/movieList");
     } catch (error) {

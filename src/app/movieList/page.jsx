@@ -10,7 +10,6 @@ import { useGetMoviesQuery } from "../../services/moviesApi";
 const MovieList = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const moviesPerPage = 2;
 
   const params = {
     pageNo: 1,
@@ -40,9 +39,9 @@ const MovieList = () => {
   }
 
   const totalMovies = moviesData?.count || 0;
-  const indexOfLastMovie = currentPage * moviesPerPage;
-  const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
-  const totalPages = Math.ceil(totalMovies / moviesPerPage);
+  const indexOfLastMovie = currentPage * params.pageSize;
+  const indexOfFirstMovie = indexOfLastMovie - params.pageSize;
+  const totalPages = Math.ceil(totalMovies / params.pageSize);
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 

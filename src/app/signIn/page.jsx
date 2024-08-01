@@ -6,8 +6,10 @@ import { Button } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
 import ButtonComponent from "../components/button";
 import InputField from "../components/inputField";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -18,6 +20,15 @@ const SignIn = () => {
     setError,
     formState: { errors },
   } = useForm({ mode: "onChange" });
+
+  const onSubmit = async (data) => {
+    const email = data.email;
+    const password = data.password;
+
+    if (email && password) {
+      router.push("/movieList");
+    }
+  };
 
   return (
     <div>
@@ -106,7 +117,7 @@ const SignIn = () => {
       <div className="my-2 w-100">
         <ButtonComponent
           title="Login"
-          onPress={handleSubmit(() => {})}
+          onPress={handleSubmit(onSubmit)}
           btnContainerOverrideStyle="w-100"
         />
       </div>
