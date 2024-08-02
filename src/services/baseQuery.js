@@ -10,6 +10,10 @@ const baseQueryMovies = async (args, api, extraOptions) => {
     prepareHeaders: (headers) => {
       headers.set("Accept", "application/json");
       headers.set("Content-Type", "application/json");
+      headers.set(
+        "Authorization",
+        `Bearer ${localStorage.getItem("access-token")}`
+      );
       return headers;
     },
   });

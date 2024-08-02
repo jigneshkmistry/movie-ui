@@ -11,6 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { usePostMoviesMutation } from "../../../services/moviesApi";
 import { useSnackbar } from "notistack";
+import ProtectedRoute from "../../protected";
 
 const CreateMovie = () => {
   const router = useRouter();
@@ -224,4 +225,4 @@ const CreateMovie = () => {
   );
 };
 
-export default CreateMovie;
+export default ProtectedRoute(CreateMovie);

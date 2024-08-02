@@ -7,6 +7,7 @@ import { BoxArrowRight, PlusCircle } from "react-bootstrap-icons";
 import { useRouter } from "next/navigation";
 import { useGetMoviesQuery } from "../../services/moviesApi";
 import { useTranslation } from "react-i18next";
+import ProtectedRoute from "../protected";
 
 const MovieList = () => {
   const router = useRouter();
@@ -123,4 +124,4 @@ const MovieList = () => {
   );
 };
 
-export default MovieList;
+export default ProtectedRoute(MovieList);

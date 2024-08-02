@@ -1,5 +1,6 @@
 "use client";
-
+import { useLoginMutation } from "../../services/authApi";
+import { enqueueSnackbar } from "notistack";
 import { ErrorMessage } from "@hookform/error-message";
 import React from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
@@ -12,6 +13,7 @@ import { useTranslation } from "react-i18next";
 const SignIn = () => {
   const router = useRouter();
   const { t } = useTranslation();
+  const [login] = useLoginMutation();
   const {
     control,
     handleSubmit,
@@ -28,7 +30,23 @@ const SignIn = () => {
     const password = data.password;
 
     if (email && password) {
-      router.push("/movieList");
+      try {
+        const payload = {
+          username: email,
+          password,
+        };
+
+        const res = await login({ payload: payload }).unwrap();
+
+        if (res) {
+          console.log("res", res);
+          localStorage.setItem("access-token", res.AccessToken);
+          enqueueSnackbar("Login successfully", { variant: "success" });
+          router.push("/movieList");
+        }
+      } catch (error) {
+        enqueueSnackbar("Something went wrong", { variant: "error" });
+      }
     }
   };
 

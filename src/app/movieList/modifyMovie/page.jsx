@@ -9,6 +9,7 @@ import React from "react";
 
 import { Container, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
+import ProtectedRoute from "../../protected";
 
 const ModifyMovie = () => {
   const router = useRouter();
@@ -110,4 +111,4 @@ const ModifyMovie = () => {
   );
 };
 
-export default ModifyMovie;
+export default ProtectedRoute(ModifyMovie);
