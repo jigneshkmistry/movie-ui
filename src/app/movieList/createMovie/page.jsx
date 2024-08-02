@@ -33,8 +33,10 @@ const CreateMovie = () => {
     const title = data.title;
     const publishing_year = parseInt(data.publishingYear, 10);
     const poster =
-      // imageUrl; right now using dummy url
-      "https://static.wikia.nocookie.net/jamescameronsavatar/images/1/15/Avatar_poster.jpg/revision/latest/scale-to-width/360?cb=20100103203426";
+      "https://cdn.vox-cdn.com/thumbor/TAzotU1RnNkUJ7RwFtu7Rn1Ntcw=/0x0:1688x2500/1200x0/filters:focal(0x0:1688x2500):no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/11614195/InfinityWar5aabd55fed5fa.jpg";
+    // "https://m.media-amazon.com/images/M/MV5BMjI5NTM5MDA2N15BMl5BanBnXkFtZTcwNjkwMzQxNw@@._V1_FMjpg_UX1000_.jpg";
+    // imageUrl; right now using dummy url
+    // "https://static.wikia.nocookie.net/jamescameronsavatar/images/1/15/Avatar_poster.jpg/revision/latest/scale-to-width/360?cb=20100103203426";
 
     try {
       const newMovie = {

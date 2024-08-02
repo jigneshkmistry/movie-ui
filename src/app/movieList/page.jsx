@@ -6,10 +6,12 @@ import { Col, Container, Row, Pagination, Spinner } from "react-bootstrap";
 import { BoxArrowRight, PlusCircle } from "react-bootstrap-icons";
 import { useRouter } from "next/navigation";
 import { useGetMoviesQuery } from "../../services/moviesApi";
+import { useTranslation } from "react-i18next";
 
 const MovieList = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const { t } = useTranslation();
 
   const params = {
     pageNo: 1,
@@ -35,7 +37,7 @@ const MovieList = () => {
 
   if (error) {
     console.error("Error fetching movies:", error);
-    return <div>Error loading movies. Please try again later.</div>;
+    return <div>{t("Error loading movies. Please try again later.")}</div>;
   }
 
   const totalMovies = moviesData?.count || 0;
@@ -79,9 +81,7 @@ const MovieList = () => {
                   <MovieCard
                     title={movie.title}
                     year={movie.publishing_year}
-                    imageSrc={
-                      "https://static.wikia.nocookie.net/jamescameronsavatar/images/1/15/Avatar_poster.jpg/revision/latest/scale-to-width/360?cb=20100103203426"
-                    }
+                    imageSrc={movie.poster}
                   />
                 </Col>
               ))}

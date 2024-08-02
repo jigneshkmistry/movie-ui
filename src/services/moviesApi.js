@@ -23,6 +23,13 @@ export const moviesApi = createApi({
         body: payload,
       }),
     }),
+    putMovies: builder.mutation({
+      query: ({ id, payload }) => ({
+        url: `movie/${id}`,
+        method: "PUT",
+        body: payload,
+      }),
+    }),
   }),
 });
 
