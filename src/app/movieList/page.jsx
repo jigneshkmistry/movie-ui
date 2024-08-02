@@ -60,7 +60,7 @@ const MovieList = () => {
         </div>
         <div>
           <h6 className="py-4 d-flex align-items-center gap-2">
-            Log Out{" "}
+            <span className="d-none d-md-inline">Log Out </span>
             <BoxArrowRight
               color="#fff"
               className="fs-6"
@@ -75,7 +75,7 @@ const MovieList = () => {
             {moviesData.rows
               .slice(indexOfFirstMovie, indexOfLastMovie)
               .map((movie, index) => (
-                <Col key={movie.id || index} lg={3} md={6} sm={12} xs={12}>
+                <Col key={movie.id || index} lg={3} md={6} sm={6} xs={6}>
                   <MovieCard
                     title={movie.title}
                     year={movie.publishing_year}

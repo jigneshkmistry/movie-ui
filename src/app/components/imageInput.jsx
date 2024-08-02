@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { Download } from "react-bootstrap-icons";
 
-const ImageInput = () => {
+const ImageInput = ({ onImageUpload }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
@@ -36,6 +36,7 @@ const ImageInput = () => {
       const file = files[0];
       if (file.type.startsWith("image/")) {
         setImage(file);
+        onImageUpload(URL.createObjectURL(file));
       }
     }
   };
@@ -44,6 +45,7 @@ const ImageInput = () => {
     const files = e.target.files;
     if (files && files.length > 0) {
       setImage(files[0]);
+      onImageUpload(URL.createObjectURL(files[0]));
     }
   };
 
