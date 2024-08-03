@@ -1,15 +1,18 @@
 import Image from "next/image";
 import React from "react";
 
-const MovieCard = ({ title, year, imageSrc }) => {
+const MovieCard = ({ title, year, imageSrc, onClick }) => {
   return (
-    <div className="w-100 rounded shadow mb-5 overflow-hidden object-fit-cover">
+    <div
+      className="w-100 rounded shadow mb-5 overflow-hidden "
+      onClick={onclick}
+    >
       <Image
         alt="movies"
         src={imageSrc}
-        layout="responsive"
+        // layout="responsive"
         width={260}
-        height={350}
+        height={300}
         objectFit="cover"
       />
       <div className="p-2">

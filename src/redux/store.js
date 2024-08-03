@@ -12,6 +12,8 @@ import {
 import storage from "redux-persist/lib/storage";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { moviesApi } from "../services/moviesApi";
+import { imageUploadApi } from "../services/imageUploadApi";
+import { authApi } from "../services/authApi";
 
 const persistConfig = {
   key: "root",
@@ -20,7 +22,9 @@ const persistConfig = {
 };
 
 const combinedReducer = combineReducers({
+  [authApi.reducerPath]: authApi.reducer,
   [moviesApi.reducerPath]: moviesApi.reducer,
+  [imageUploadApi.reducerPath]: imageUploadApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
@@ -33,7 +37,11 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(moviesApi.middleware),
+    }).concat(
+      authApi.middleware,
+      moviesApi.middleware,
+      imageUploadApi.middleware
+    ),
 });
 
 setupListeners(store.dispatch);

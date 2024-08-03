@@ -4,9 +4,9 @@ import Image from "next/image";
 import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { Download } from "react-bootstrap-icons";
 
-const ImageInput = ({ onImageUpload }) => {
+const ImageInput = ({ onImageUpload, imageUrl }) => {
   const [isDragging, setIsDragging] = useState(false);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(imageUrl || null);
   const fileInputRef = useRef(null);
 
   const handleDragEnter = (e) => {
@@ -36,7 +36,7 @@ const ImageInput = ({ onImageUpload }) => {
       const file = files[0];
       if (file.type.startsWith("image/")) {
         setImage(file);
-        onImageUpload(URL.createObjectURL(file));
+        onImageUpload(file);
       }
     }
   };
@@ -45,7 +45,7 @@ const ImageInput = ({ onImageUpload }) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       setImage(files[0]);
-      onImageUpload(URL.createObjectURL(files[0]));
+      onImageUpload(files[0]);
     }
   };
 
@@ -73,7 +73,7 @@ const ImageInput = ({ onImageUpload }) => {
         />
         {image ? (
           <Image
-            src={URL.createObjectURL(image)}
+            src={typeof image === "object" ? URL.createObjectURL(image) : image}
             alt="Uploaded"
             className="uploaded-image"
             width={260}

@@ -48,6 +48,10 @@ const MovieList = () => {
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handlePosterClick = (data) => {
+    router.push(`/movieList/modifyMovie/${data.id}`);
+  };
+
   return (
     <Container className="my-5 position-relative z-3">
       <div className="d-flex justify-content-between">
@@ -57,17 +61,23 @@ const MovieList = () => {
             <PlusCircle
               color="#fff"
               className="fs-6 pe-auto"
-              onClick={() => router.push("/movieList/modifyMovie")}
+              onClick={() => router.push("/movieList/createMovie")}
             />
           </h4>
         </div>
-        <div>
-          <h6 className="py-4 d-flex align-items-center gap-2">
+        <div className="pe-auto">
+          <h6
+            className="py-4 d-flex align-items-center gap-2 pe-auto"
+            style={{ cursor: "pointer" }}
+          >
             <span className="d-none d-md-inline">Log Out </span>
             <BoxArrowRight
               color="#fff"
-              className="fs-6"
-              onClick={() => router.push("/")}
+              className="fs-6 pe-auto"
+              onClick={() => {
+                localStorage.clear();
+                router.push("/");
+              }}
             />
           </h6>
         </div>
@@ -78,7 +88,14 @@ const MovieList = () => {
             {moviesData.rows
               .slice(indexOfFirstMovie, indexOfLastMovie)
               .map((movie, index) => (
-                <Col key={movie.id || index} lg={3} md={6} sm={6} xs={6}>
+                <Col
+                  key={movie.id || index}
+                  lg={3}
+                  md={6}
+                  sm={6}
+                  xs={6}
+                  onClick={() => handlePosterClick(movie)}
+                >
                   <MovieCard
                     title={movie.title}
                     year={movie.publishing_year}

@@ -16,6 +16,17 @@ export const moviesApi = createApi({
         },
       }),
     }),
+    getMovieById: builder.query({
+      query: ({ id }) => ({
+        url: `movie/${id}`,
+        // params: {
+        //   fields: params.fields,
+        //   pageno: params.pageNo,
+        //   pagesize: params.pageSize,
+        //   order: params.sortOrder,
+        // },
+      }),
+    }),
     postMovies: builder.mutation({
       query: ({ payload }) => ({
         url: `movie`,
@@ -26,11 +37,16 @@ export const moviesApi = createApi({
     putMovies: builder.mutation({
       query: ({ id, payload }) => ({
         url: `movie/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: payload,
       }),
     }),
   }),
 });
 
-export const { useGetMoviesQuery, usePostMoviesMutation } = moviesApi;
+export const {
+  useGetMoviesQuery,
+  usePostMoviesMutation,
+  usePutMoviesMutation,
+  useGetMovieByIdQuery,
+} = moviesApi;

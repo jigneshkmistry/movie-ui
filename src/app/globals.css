@@ -33,6 +33,8 @@
   color: var(--movies-primary-error-color);
   font-size: 12px;
   font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .movieCardContainer {

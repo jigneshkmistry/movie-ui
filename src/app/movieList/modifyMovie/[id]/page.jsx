@@ -1,25 +1,34 @@
 "use client";
 
-import ButtonComponent from "../../components/button";
-import ImageInput from "../../components/imageInput";
-import InputField from "../../components/inputField";
+import ButtonComponent from "../../../components/button";
+import ImageInput from "../../../components/imageInput";
+import InputField from "../../../components/inputField";
 import { ErrorMessage } from "@hookform/error-message";
-import React, { useState } from "react";
+import { useRouter, usePathname, useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 import { Container, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { usePostMoviesMutation } from "../../../services/moviesApi";
+import ProtectedRoute from "../../../protected";
 import { useSnackbar } from "notistack";
-import ProtectedRoute from "../../protected";
-import { usePostImageUrlMutation } from "../../../services/imageUploadApi";
+import { usePostImageUrlMutation } from "../../../../services/imageUploadApi";
+import { usePutMoviesMutation } from "../../../../services/moviesApi";
+import { useGetMovieByIdQuery } from "../../../../services/moviesApi";
 
-const CreateMovie = () => {
+const ModifyMovie = () => {
   const router = useRouter();
+  const params = useParams();
+
+  const id = params.id;
+
+  const { data: movieDataId, isLoading } = useGetMovieByIdQuery({ id });
+
   const { enqueueSnackbar } = useSnackbar();
-  const [postMovies] = usePostMoviesMutation();
+  const [putMovies] = usePutMoviesMutation();
   const [postImageUrl] = usePostImageUrlMutation();
   const [imageUrl, setImageUrl] = useState(null);
+  const [image, setImage] = useState(null);
+
   const handleImageUpload = (url) => {
     setImageUrl(url);
   };
@@ -28,43 +37,57 @@ const CreateMovie = () => {
     control,
     handleSubmit,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("file", imageUrl);
-    let res;
-    try {
-      res = await postImageUrl(formData).unwrap();
-    } catch (error) {
-      enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
+  useEffect(() => {
+    if (movieDataId) {
+      setValue("title", movieDataId?.title);
+      setValue("publishingYear", movieDataId?.publishing_year);
+      setImageUrl(movieDataId?.poster);
+      setImage(movieDataId?.poster);
+      setValue("id", movieDataId?.id);
     }
+  }, [movieDataId]);
+
+  const onSubmit = async (data) => {
+    console.log("data", data);
+    let res;
+    if (imageUrl !== image) {
+      const formData = new FormData();
+      formData.append("file", imageUrl);
+
+      try {
+        res = await postImageUrl(formData).unwrap();
+      } catch (error) {
+        enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
+      }
+    }
+
     const title = data.title;
     const publishing_year = parseInt(data.publishingYear, 10);
-    const poster = res.url;
+    const poster = res?.url ? res?.url : imageUrl;
 
     try {
-      const newMovie = {
+      const updatedMovie = {
         title,
         publishing_year,
         poster,
       };
 
-      await postMovies({ payload: newMovie }).unwrap();
-      enqueueSnackbar("Movie successfully created", { variant: "success" });
+      await putMovies({ id: data.id, payload: updatedMovie }).unwrap();
+      enqueueSnackbar("Movie successfully Updated", { variant: "success" });
       router.push("/movieList");
     } catch (error) {
-      enqueueSnackbar("Error creating movie", { variant: "error" });
+      enqueueSnackbar("Error Updating movie", { variant: "error" });
     }
   };
 
   return (
     <Container className="my-5 position-relative z-3">
       <div>
-        <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">
-          Create a new movie
-        </h4>
+        <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">Edit</h4>
       </div>
       <Row style={{ marginTop: "30px" }}>
         <Col lg={3} md={6} sm={12} xs={12} className="d-md-none d-block">
@@ -128,7 +151,9 @@ const CreateMovie = () => {
           </div>
         </Col>
         <Col lg={6} md={6} sm={12} xs={12}>
-          <ImageInput onImageUpload={handleImageUpload} />
+          {imageUrl && (
+            <ImageInput imageUrl={imageUrl} onImageUpload={handleImageUpload} />
+          )}
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className="d-md-block d-none ">
           <div>
@@ -200,7 +225,7 @@ const CreateMovie = () => {
             </div>
             <div className="col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Submit"
+                title="Update"
                 onPress={handleSubmit(onSubmit)}
                 btnContainerOverrideStyle="w-100"
               />
@@ -218,7 +243,7 @@ const CreateMovie = () => {
             </div>
             <div className="col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Submit"
+                title="Update"
                 onPress={handleSubmit(onSubmit)}
                 btnContainerOverrideStyle="w-100"
               />
@@ -230,4 +255,4 @@ const CreateMovie = () => {
   );
 };
 
-export default ProtectedRoute(CreateMovie);
+export default ProtectedRoute(ModifyMovie);

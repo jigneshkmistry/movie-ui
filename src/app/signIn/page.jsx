@@ -51,18 +51,13 @@ const SignIn = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="text-center">
         <h2>{t("Sign In")}</h2>
       </div>
-      <Container>
-        <Row>
-          <Col
-            lg={{ span: 6, offset: 3 }}
-            md={{ span: 6, offset: 3 }}
-            sm={12}
-            xs={12}
-          >
+      <Container className="w-100">
+        <Row className="d-flex flex-column justify-content-center align-items-center">
+          <Col lg={3} md={6} sm={12} xs={12}>
             <Controller
               control={control}
               name={"email"}
@@ -82,7 +77,7 @@ const SignIn = () => {
                     value={value || getValues("email")}
                     onChange={(value) => onChange(value)}
                     placeholder={t("Email")}
-                    className="form-control"
+                    className="form-control w-100"
                   />
                 </>
               )}
@@ -95,12 +90,7 @@ const SignIn = () => {
               )}
             />
           </Col>
-          <Col
-            lg={{ span: 6, offset: 3 }}
-            md={{ span: 6, offset: 3 }}
-            sm={12}
-            xs={12}
-          >
+          <Col lg={3} md={6} sm={12} xs={12}>
             <Controller
               control={control}
               name={"password"}
@@ -125,7 +115,7 @@ const SignIn = () => {
                     value={value || getValues("password")}
                     onChange={(value) => onChange(value)}
                     placeholder={t("Password")}
-                    className="form-control"
+                    className="form-control w-100"
                   />
                 </>
               )}
@@ -135,30 +125,25 @@ const SignIn = () => {
               <p className="error-message">{errors?.password?.message}</p>
             )}
           </Col>
-        </Row>
 
-        <div className="d-flex gap-2 justify-content-center align-items-center">
-          <InputField
-            type="checkbox"
-            name="remeberMe"
-            // checked
-          />
-          {t("Remember Me")}
-        </div>
-        <Col
-          lg={{ span: 6, offset: 3 }}
-          md={{ span: 6, offset: 3 }}
-          sm={12}
-          xs={12}
-        >
-          <ButtonComponent
-            title={t("Login")}
-            onPress={handleSubmit(onSubmit)}
-            btnContainerOverrideStyle="w-100"
-          />
-        </Col>
+          <div className="d-flex gap-2 justify-content-center align-items-center">
+            <InputField
+              type="checkbox"
+              name="remeberMe"
+              // checked
+            />
+            {t("Remember Me")}
+          </div>
+          <Col lg={3} md={6} sm={12} xs={12}>
+            <ButtonComponent
+              title={t("Login")}
+              onPress={handleSubmit(onSubmit)}
+              btnContainerOverrideStyle="w-100"
+            />
+          </Col>
+        </Row>
       </Container>
-    </div>
+    </>
   );
 };
 
