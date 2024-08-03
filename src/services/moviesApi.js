@@ -4,6 +4,7 @@ import baseQueryMovies from "./baseQuery";
 export const moviesApi = createApi({
   reducerPath: "moviesApi",
   baseQuery: baseQueryMovies,
+  tagTypes: ["Movie"],
   endpoints: (builder) => ({
     getMovies: builder.query({
       query: (params) => ({
@@ -15,16 +16,11 @@ export const moviesApi = createApi({
           order: params.sortOrder,
         },
       }),
+      providesTags: ["Movie"],
     }),
     getMovieById: builder.query({
       query: ({ id }) => ({
         url: `movie/${id}`,
-        // params: {
-        //   fields: params.fields,
-        //   pageno: params.pageNo,
-        //   pagesize: params.pageSize,
-        //   order: params.sortOrder,
-        // },
       }),
     }),
     postMovies: builder.mutation({
@@ -33,6 +29,7 @@ export const moviesApi = createApi({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: ["Movie"],
     }),
     putMovies: builder.mutation({
       query: ({ id, payload }) => ({
@@ -40,6 +37,7 @@ export const moviesApi = createApi({
         method: "PATCH",
         body: payload,
       }),
+      invalidatesTags: ["Movie"],
     }),
   }),
 });

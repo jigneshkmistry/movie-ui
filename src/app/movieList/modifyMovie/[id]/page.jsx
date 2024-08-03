@@ -14,9 +14,11 @@ import { useSnackbar } from "notistack";
 import { usePostImageUrlMutation } from "../../../../services/imageUploadApi";
 import { usePutMoviesMutation } from "../../../../services/moviesApi";
 import { useGetMovieByIdQuery } from "../../../../services/moviesApi";
+import { useTranslation } from "react-i18next";
 
 const ModifyMovie = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const params = useParams();
 
   const id = params.id;
@@ -87,7 +89,9 @@ const ModifyMovie = () => {
   return (
     <Container className="my-5 position-relative z-3">
       <div>
-        <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">Edit</h4>
+        <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">
+          {t("Edit")}
+        </h4>
       </div>
       <Row style={{ marginTop: "30px" }}>
         <Col lg={3} md={6} sm={12} xs={12} className="d-md-none d-block">
@@ -106,7 +110,7 @@ const ModifyMovie = () => {
                     name="title"
                     value={value || getValues("title")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Title"
+                    placeholder={t("Title")}
                     className="col-12 col-md-12 col-sm-8"
                   />
                 </>
@@ -135,7 +139,7 @@ const ModifyMovie = () => {
                     name="publishingYear"
                     value={value || getValues("publishingYear")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Publishing year"
+                    placeholder={t("Publishing year")}
                     className="col-12 col-md-10 col-sm-8"
                   />
                 </>
@@ -171,7 +175,7 @@ const ModifyMovie = () => {
                     name="title"
                     value={value || getValues("title")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Title"
+                    placeholder={t("Title")}
                     className="col-12 col-md-12 col-sm-8"
                   />
                 </>
@@ -200,7 +204,7 @@ const ModifyMovie = () => {
                     name="publishingYear"
                     value={value || getValues("publishingYear")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Publishing year"
+                    placeholder={t("Publishing year")}
                     className="col-12 col-md-10 col-sm-8"
                   />
                 </>
@@ -218,14 +222,14 @@ const ModifyMovie = () => {
           <Row className="d-flex flex-row mt-5 ">
             <div className=" col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Cancel"
+                title={t("Cancel")}
                 onPress={() => router.push("/movieList")}
                 btnContainerOverrideStyle="bg-movies-primary  bg-movie-button-border w-100"
               />
             </div>
             <div className="col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Update"
+                title={t("Update")}
                 onPress={handleSubmit(onSubmit)}
                 btnContainerOverrideStyle="w-100"
               />
@@ -236,14 +240,14 @@ const ModifyMovie = () => {
           <Row className="d-flex flex-row mt-5 ">
             <div className=" col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Cancel"
+                title={t("Cancel")}
                 onPress={() => router.push("/movieList")}
                 btnContainerOverrideStyle="bg-movies-primary  bg-movie-button-border w-100"
               />
             </div>
             <div className="col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Update"
+                title={t("Update")}
                 onPress={handleSubmit(onSubmit)}
                 btnContainerOverrideStyle="w-100"
               />

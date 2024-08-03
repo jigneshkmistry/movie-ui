@@ -57,7 +57,7 @@ const MovieList = () => {
       <div className="d-flex justify-content-between">
         <div>
           <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">
-            My movies{" "}
+            {t("My movies")}{" "}
             <PlusCircle
               color="#fff"
               className="fs-6 pe-auto"
@@ -70,12 +70,14 @@ const MovieList = () => {
             className="py-4 d-flex align-items-center gap-2 pe-auto"
             style={{ cursor: "pointer" }}
           >
-            <span className="d-none d-md-inline">Log Out </span>
+            <span className="d-none d-md-inline">{t("Log Out")} </span>
             <BoxArrowRight
               color="#fff"
               className="fs-6 pe-auto"
               onClick={() => {
-                localStorage.clear();
+                if (typeof window !== "undefined") {
+                  window.localStorage.clear();
+                }
                 router.push("/");
               }}
             />
@@ -112,7 +114,7 @@ const MovieList = () => {
                 as="span"
                 className="nav-button"
               >
-                <span>Prev</span>
+                <span>{t("Prev")}</span>
               </Pagination.Prev>
               {[...Array(totalPages)].map((_, index) => (
                 <Pagination.Item
@@ -129,7 +131,7 @@ const MovieList = () => {
                 as="span"
                 className="nav-button"
               >
-                <span>Next</span>
+                <span>{t("Next")}</span>
               </Pagination.Next>
             </Pagination>
           </div>

@@ -40,7 +40,10 @@ const SignIn = () => {
 
         if (res) {
           console.log("res", res);
-          localStorage.setItem("access-token", res.AccessToken);
+          if (typeof window !== "undefined") {
+            window.localStorage.setItem("access-token", res.AccessToken);
+          }
+
           enqueueSnackbar("Login successfully", { variant: "success" });
           router.push("/movieList");
         }

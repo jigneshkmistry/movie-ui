@@ -14,6 +14,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { moviesApi } from "../services/moviesApi";
 import { imageUploadApi } from "../services/imageUploadApi";
 import { authApi } from "../services/authApi";
+import AuthSlice from "../redux/authSlice";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +26,7 @@ const combinedReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [moviesApi.reducerPath]: moviesApi.reducer,
   [imageUploadApi.reducerPath]: imageUploadApi.reducer,
+  auth: AuthSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
