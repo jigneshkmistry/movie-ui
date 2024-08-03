@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 const MovieCard = ({ title, year, imageSrc, onClick }) => {
@@ -7,9 +6,9 @@ const MovieCard = ({ title, year, imageSrc, onClick }) => {
       className="w-100 rounded shadow mb-5 overflow-hidden "
       onClick={onclick}
     >
-      <Image
+      <img
         alt="movies"
-        src={imageSrc}
+        src={imageSrc.replace(/^https:/, "http:")}
         // layout="responsive"
         width={260}
         height={300}

@@ -4,8 +4,8 @@ import ButtonComponent from "../../components/button";
 import ImageInput from "../../components/imageInput";
 import InputField from "../../components/inputField";
 import { ErrorMessage } from "@hookform/error-message";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, usePathname, useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 import { Container, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
@@ -13,43 +13,76 @@ import ProtectedRoute from "../../protected";
 import { useSnackbar } from "notistack";
 import { usePostImageUrlMutation } from "../../../services/imageUploadApi";
 import { usePutMoviesMutation } from "../../../services/moviesApi";
-const ModifyMovie = ({ row }) => {
+import { useGetMovieByIdQuery } from "../../../services/moviesApi";
+import { useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+
+const ModifyMovie = () => {
   const router = useRouter();
+  const serachParms = useSearchParams();
+  const { t } = useTranslation();
+  const id = serachParms.get("id");
+  const params = useParams();
+  debugger;
+  //const id = params.id;
+
+  const { data: movieDataId, isLoading } = useGetMovieByIdQuery({ id });
+
   const { enqueueSnackbar } = useSnackbar();
+  const [putMovies] = usePutMoviesMutation();
   const [postImageUrl] = usePostImageUrlMutation();
   const [imageUrl, setImageUrl] = useState(null);
+  const [image, setImage] = useState(null);
+
   const handleImageUpload = (url) => {
-    setImageUrl(url);
+    const modifiedUrl = url.replace(/^https:/, "http:");
+    setImageUrl(modifiedUrl);
   };
 
   const {
     control,
     handleSubmit,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("file", imageUrl);
-    let res;
-    try {
-      res = await postImageUrl(formData).unwrap();
-    } catch (error) {
-      enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
+  useEffect(() => {
+    if (movieDataId) {
+      setValue("title", movieDataId?.title);
+      setValue("publishingYear", movieDataId?.publishing_year);
+      setImageUrl(movieDataId?.poster);
+      setImage(movieDataId?.poster);
+      setValue("id", movieDataId?.id);
     }
+  }, [movieDataId]);
+
+  const onSubmit = async (data) => {
+    console.log("data", data);
+    let res;
+    if (imageUrl !== image) {
+      const formData = new FormData();
+      formData.append("file", imageUrl);
+
+      try {
+        res = await postImageUrl(formData).unwrap();
+      } catch (error) {
+        enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
+      }
+    }
+
     const title = data.title;
     const publishing_year = parseInt(data.publishingYear, 10);
-    const poster = res.url;
+    const poster = res?.url ? res?.url : imageUrl;
 
     try {
-      const newMovie = {
+      const updatedMovie = {
         title,
         publishing_year,
         poster,
       };
 
-      await postMovies({ payload: newMovie }).unwrap();
+      await putMovies({ id: data.id, payload: updatedMovie }).unwrap();
       enqueueSnackbar("Movie successfully Updated", { variant: "success" });
       router.push("/movieList");
     } catch (error) {
@@ -60,7 +93,9 @@ const ModifyMovie = ({ row }) => {
   return (
     <Container className="my-5 position-relative z-3">
       <div>
-        <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">Edit</h4>
+        <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">
+          {t("Edit")}
+        </h4>
       </div>
       <Row style={{ marginTop: "30px" }}>
         <Col lg={3} md={6} sm={12} xs={12} className="d-md-none d-block">
@@ -79,7 +114,7 @@ const ModifyMovie = ({ row }) => {
                     name="title"
                     value={value || getValues("title")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Title"
+                    placeholder={t("Title")}
                     className="col-12 col-md-12 col-sm-8"
                   />
                 </>
@@ -108,7 +143,7 @@ const ModifyMovie = ({ row }) => {
                     name="publishingYear"
                     value={value || getValues("publishingYear")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Publishing year"
+                    placeholder={t("Publishing year")}
                     className="col-12 col-md-10 col-sm-8"
                   />
                 </>
@@ -124,7 +159,9 @@ const ModifyMovie = ({ row }) => {
           </div>
         </Col>
         <Col lg={6} md={6} sm={12} xs={12}>
-          <ImageInput onImageUpload={handleImageUpload} />
+          {imageUrl && (
+            <ImageInput imageUrl={imageUrl} onImageUpload={handleImageUpload} />
+          )}
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className="d-md-block d-none ">
           <div>
@@ -142,7 +179,7 @@ const ModifyMovie = ({ row }) => {
                     name="title"
                     value={value || getValues("title")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Title"
+                    placeholder={t("Title")}
                     className="col-12 col-md-12 col-sm-8"
                   />
                 </>
@@ -171,7 +208,7 @@ const ModifyMovie = ({ row }) => {
                     name="publishingYear"
                     value={value || getValues("publishingYear")}
                     onChange={(value) => onChange(value)}
-                    placeholder="Publishing year"
+                    placeholder={t("Publishing year")}
                     className="col-12 col-md-10 col-sm-8"
                   />
                 </>
@@ -189,14 +226,14 @@ const ModifyMovie = ({ row }) => {
           <Row className="d-flex flex-row mt-5 ">
             <div className=" col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Cancel"
+                title={t("Cancel")}
                 onPress={() => router.push("/movieList")}
                 btnContainerOverrideStyle="bg-movies-primary  bg-movie-button-border w-100"
               />
             </div>
             <div className="col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Update"
+                title={t("Update")}
                 onPress={handleSubmit(onSubmit)}
                 btnContainerOverrideStyle="w-100"
               />
@@ -207,14 +244,14 @@ const ModifyMovie = ({ row }) => {
           <Row className="d-flex flex-row mt-5 ">
             <div className=" col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Cancel"
+                title={t("Cancel")}
                 onPress={() => router.push("/movieList")}
                 btnContainerOverrideStyle="bg-movies-primary  bg-movie-button-border w-100"
               />
             </div>
             <div className="col-6 col-md-6 col-sm-8">
               <ButtonComponent
-                title="Update"
+                title={t("Update")}
                 onPress={handleSubmit(onSubmit)}
                 btnContainerOverrideStyle="w-100"
               />

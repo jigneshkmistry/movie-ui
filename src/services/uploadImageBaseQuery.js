@@ -10,7 +10,7 @@ const baseQueryImageUpload = async (args, api, extraOptions) => {
       //   headers.set("Accept", "application/json");
       headers.set(
         "Authorization",
-        `Bearer ${localStorage.getItem("access-token")}`
+        `Bearer ${window?.localStorage.getItem("access-token")}`
       );
       return headers;
     },

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { Download } from "react-bootstrap-icons";
 
@@ -72,7 +71,7 @@ const ImageInput = ({ onImageUpload, imageUrl }) => {
           style={{ display: "none" }}
         />
         {image ? (
-          <Image
+          <img
             src={typeof image === "object" ? URL.createObjectURL(image) : image}
             alt="Uploaded"
             className="uploaded-image"

@@ -9,6 +9,7 @@ const nextConfig = {
       "movie-image-dev.s3.amazonaws.com",
     ], // Add the domain(s) from which images will be loaded
   },
+  output: "export",
 };
 
 export default nextConfig;
