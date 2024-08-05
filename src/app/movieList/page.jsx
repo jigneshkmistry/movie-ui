@@ -66,22 +66,27 @@ const MovieList = () => {
           </h4>
         </div>
         <div className="pe-auto">
-          <h6
-            className="py-4 d-flex align-items-center gap-2 pe-auto"
-            style={{ cursor: "pointer" }}
+          <button
+            className="btn text-white py-4 d-flex align-items-center gap-2"
+            style={{
+              cursor: "pointer",
+              background: "none",
+              border: "none",
+              padding: 0,
+              outline: "none",
+              boxShadow: "none",
+              marginTop: "5px",
+            }}
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.localStorage.clear();
+              }
+              router.push("/");
+            }}
           >
             <span className="d-none d-md-inline">{t("Log Out")}</span>
-            <BoxArrowRight
-              color="#fff"
-              className="fs-6 pe-auto"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  window.localStorage.clear();
-                }
-                router.push("/");
-              }}
-            />
-          </h6>
+            <BoxArrowRight color="#fff" className="fs-6 pe-auto" />
+          </button>
         </div>
       </div>
       {totalMovies > 0 ? (
