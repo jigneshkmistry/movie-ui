@@ -22,6 +22,7 @@ export const moviesApi = createApi({
       query: ({ id }) => ({
         url: `movie/${id}`,
       }),
+      providesTags: ["Movie"],
     }),
     postMovies: builder.mutation({
       query: ({ payload }) => ({

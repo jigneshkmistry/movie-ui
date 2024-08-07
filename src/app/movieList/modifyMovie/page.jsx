@@ -1,12 +1,10 @@
 "use client";
-
 import ButtonComponent from "../../components/button";
 import ImageInput from "../../components/imageInput";
 import InputField from "../../components/inputField";
 import { ErrorMessage } from "@hookform/error-message";
-import { useRouter, usePathname, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
 import { Container, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import ProtectedRoute from "../../protected";
@@ -19,76 +17,61 @@ import { useTranslation } from "react-i18next";
 
 const ModifyMovie = () => {
   const router = useRouter();
-  const serachParms = useSearchParams();
+  const id = useSearchParams()?.get("id");
   const { t } = useTranslation();
-  const id = serachParms.get("id");
-  const params = useParams();
- // debugger;
-  //const id = params.id;
-
-  const { data: movieDataId, isLoading } = useGetMovieByIdQuery({ id });
-
+  const { data: movieData, isLoading } = useGetMovieByIdQuery({ id });
   const { enqueueSnackbar } = useSnackbar();
   const [putMovies] = usePutMoviesMutation();
   const [postImageUrl] = usePostImageUrlMutation();
-  const [imageUrl, setImageUrl] = useState(null);
-  const [image, setImage] = useState(null);
+  const [fileData, setfileData] = useState(null);
+  const poster = movieData?.poster;
 
-  const handleImageUpload = (url) => {
-    const modifiedUrl = url.replace(/^https:/, "http:");
-    setImageUrl(modifiedUrl);
+  const { control, handleSubmit, getValues, setValue, formState: { errors } }
+    = useForm({ mode: "onChange" });
+
+  if (movieData) {
+    setValue("title", movieData?.title);
+    setValue("publishingYear", movieData?.publishing_year);
+    setValue("id", movieData?.id);
+  }
+
+  const handleImageUpload = (file_data) => {
+    setfileData(file_data);
   };
 
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm({ mode: "onChange" });
-
-  useEffect(() => {
-    if (movieDataId) {
-      setValue("title", movieDataId?.title);
-      setValue("publishingYear", movieDataId?.publishing_year);
-      setImageUrl(movieDataId?.poster);
-      setImage(movieDataId?.poster);
-      setValue("id", movieDataId?.id);
-    }
-  }, [movieDataId]);
-
   const onSubmit = async (data) => {
-    console.log("data", data);
-    let res;
-    if (imageUrl !== image) {
-      const formData = new FormData();
-      formData.append("file", imageUrl);
-
-      try {
-        res = await postImageUrl(formData).unwrap();
-      } catch (error) {
-        enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
-      }
+    let image_url = poster;
+    if (fileData) {
+      image_url = await uploadMoviePoster(fileData)
     }
-
-    const title = data.title;
-    const publishing_year = parseInt(data.publishingYear, 10);
-    const poster = res?.url ? res?.url : imageUrl;
-
     try {
-      const updatedMovie = {
-        title,
-        publishing_year,
-        poster,
-      };
-
-      await putMovies({ id: data.id, payload: updatedMovie }).unwrap();
+      await putMovies({
+        id: data.id, payload: {
+          title: data.title,
+          publishing_year: parseInt(data.publishingYear, 10),
+          poster: image_url
+        }
+      }).unwrap();
       enqueueSnackbar("Movie successfully Updated", { variant: "success" });
       router.push("/movieList");
     } catch (error) {
       enqueueSnackbar(error.data.message, { variant: "error" });
     }
   };
+
+  const uploadMoviePoster = async (fileData) => {
+    let poster_url = "";
+    try {
+      const formData = new FormData();
+      formData.append("file", fileData);
+      const res = await postImageUrl(formData).unwrap();
+      poster_url = res.url;
+    } catch (error) {
+      enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
+      return poster_url;
+    }
+    return poster_url;
+  }
 
   return (
     <Container className="my-5 position-relative z-3">
@@ -159,8 +142,8 @@ const ModifyMovie = () => {
           </div>
         </Col>
         <Col lg={6} md={6} sm={12} xs={12}>
-          {imageUrl && (
-            <ImageInput imageUrl={imageUrl} onImageUpload={handleImageUpload} />
+          {poster && (
+            <ImageInput imageUrl={poster} onImageUpload={handleImageUpload} />
           )}
         </Col>
         <Col lg={3} md={6} sm={12} xs={12} className="d-md-block d-none ">
