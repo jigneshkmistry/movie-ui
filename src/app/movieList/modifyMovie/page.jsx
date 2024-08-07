@@ -23,7 +23,7 @@ const ModifyMovie = () => {
   const { t } = useTranslation();
   const id = serachParms.get("id");
   const params = useParams();
-  debugger;
+ // debugger;
   //const id = params.id;
 
   const { data: movieDataId, isLoading } = useGetMovieByIdQuery({ id });
@@ -86,7 +86,7 @@ const ModifyMovie = () => {
       enqueueSnackbar("Movie successfully Updated", { variant: "success" });
       router.push("/movieList");
     } catch (error) {
-      enqueueSnackbar("Error Updating movie", { variant: "error" });
+      enqueueSnackbar(error.data.message, { variant: "error" });
     }
   };
 

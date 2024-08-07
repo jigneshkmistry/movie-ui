@@ -11,7 +11,7 @@ export const moviesApi = createApi({
         url: "movie",
         params: {
           fields: params.fields,
-          pageno: params.pageNo,
+          pageNo: params.pageNo,
           pagesize: params.pageSize,
           order: params.sortOrder,
         },

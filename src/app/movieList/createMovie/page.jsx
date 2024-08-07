@@ -57,7 +57,7 @@ const CreateMovie = () => {
       enqueueSnackbar("Movie successfully created", { variant: "success" });
       router.push("/movieList");
     } catch (error) {
-      enqueueSnackbar("Error creating movie", { variant: "error" });
+      enqueueSnackbar(error.data.message, { variant: "error" });
     }
   };
 

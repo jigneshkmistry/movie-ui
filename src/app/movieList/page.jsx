@@ -15,8 +15,8 @@ const MovieList = () => {
   const { t } = useTranslation();
 
   const params = {
-    pageNo: 1,
-    pageSize: 10,
+    pageNo: currentPage,
+    pageSize: 2,
     fields: "id,title,publishing_year,poster",
     sortOrder: "id desc",
   };
@@ -42,8 +42,6 @@ const MovieList = () => {
   }
 
   const totalMovies = moviesData?.count || 0;
-  const indexOfLastMovie = currentPage * params.pageSize;
-  const indexOfFirstMovie = indexOfLastMovie - params.pageSize;
   const totalPages = Math.ceil(totalMovies / params.pageSize);
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
@@ -93,7 +91,7 @@ const MovieList = () => {
         <>
           <Row>
             {moviesData.rows
-              .slice(indexOfFirstMovie, indexOfLastMovie)
+              // .slice(indexOfFirstMovie, indexOfLastMovie)
               .map((movie, index) => (
                 <Col
                   key={movie.id || index}
