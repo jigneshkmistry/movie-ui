@@ -1,12 +1,10 @@
 "use client";
-
 import ButtonComponent from "../../components/button";
 import ImageInput from "../../components/imageInput";
 import InputField from "../../components/inputField";
 import { ErrorMessage } from "@hookform/error-message";
 import { useTranslation } from "react-i18next";
 import React, { useState } from "react";
-
 import { Container, Row, Col } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -20,10 +18,11 @@ const CreateMovie = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [postMovies] = usePostMoviesMutation();
   const [postImageUrl] = usePostImageUrlMutation();
-  const [imageUrl, setImageUrl] = useState(null);
+  const [fileData, setfileData] = useState(null);
   const { t } = useTranslation();
-  const handleImageUpload = (url) => {
-    setImageUrl(url);
+
+  const handleImageUpload = (file) => {
+    setfileData(file);
   };
 
   const {
@@ -34,32 +33,39 @@ const CreateMovie = () => {
   } = useForm({ mode: "onChange" });
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("file", imageUrl);
-    let res;
-    try {
-      res = await postImageUrl(formData).unwrap();
-    } catch (error) {
-      enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
-    }
-    const title = data.title;
-    const publishing_year = parseInt(data.publishingYear, 10);
-    const poster = res.url;
 
-    try {
-      const newMovie = {
-        title,
-        publishing_year,
-        poster,
-      };
+    const poster_url = await uploadMoviePoster(fileData);
 
-      await postMovies({ payload: newMovie }).unwrap();
-      enqueueSnackbar("Movie successfully created", { variant: "success" });
-      router.push("/movieList");
-    } catch (error) {
-      enqueueSnackbar(error.data.message, { variant: "error" });
+    if (poster_url) {
+      try {
+        await postMovies({
+          payload: {
+            title: data.title,
+            publishing_year: parseInt(data.publishingYear, 10),
+            poster: poster_url
+          }
+        }).unwrap();
+        enqueueSnackbar("Movie successfully created", { variant: "success" });
+        router.push("/movieList");
+      } catch (error) {
+        enqueueSnackbar(error.data.message, { variant: "error" });
+      }
     }
   };
+
+  const uploadMoviePoster = async (fileData) => {
+    let poster_url = "";
+    try {
+      const formData = new FormData();
+      formData.append("file", fileData);
+      const res = await postImageUrl(formData).unwrap();
+      poster_url = res.url;
+    } catch (error) {
+      enqueueSnackbar("Error Uploading Movie Poster", { variant: "error" });
+      return poster_url;
+    }
+    return poster_url;
+  }
 
   return (
     <Container className="my-5 position-relative z-3">
