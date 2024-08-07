@@ -29,11 +29,14 @@ const ModifyMovie = () => {
   const { control, handleSubmit, getValues, setValue, formState: { errors } }
     = useForm({ mode: "onChange" });
 
-  if (movieData) {
-    setValue("title", movieData?.title);
-    setValue("publishingYear", movieData?.publishing_year);
-    setValue("id", movieData?.id);
-  }
+  useEffect(() => {
+    if (movieData) {
+      setValue("title", movieData?.title);
+      setValue("publishingYear", movieData?.publishing_year);
+      setValue("id", movieData?.id);
+    }
+  }, [movieData])
+
 
   const handleImageUpload = (file_data) => {
     setfileData(file_data);
@@ -118,6 +121,10 @@ const ModifyMovie = () => {
               defaultValue={""}
               rules={{
                 required: "This field is required",
+                validate: {
+                  isNumber: (value) => !isNaN(value) || 'Year must be a number',
+                  inRange: (value) => (value >= 1900 && value <= new Date().getFullYear()) || `Year must be between 1900 and ${new Date().getFullYear()}`
+                }
               }}
               render={({ field: { onChange, value } }) => (
                 <>

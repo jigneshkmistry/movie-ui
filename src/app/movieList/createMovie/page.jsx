@@ -112,6 +112,10 @@ const CreateMovie = () => {
               defaultValue={""}
               rules={{
                 required: "This field is required",
+                validate: {
+                  isNumber: (value) => !isNaN(value) || 'Year must be a number',
+                  inRange: (value) => (value >= 1900 && value <= new Date().getFullYear()) || `Year must be between 1900 and ${new Date().getFullYear()}`
+                }
               }}
               render={({ field: { onChange, value } }) => (
                 <>
