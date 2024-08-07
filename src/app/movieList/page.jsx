@@ -16,7 +16,7 @@ const MovieList = () => {
 
   const params = {
     pageNo: currentPage,
-    pageSize: 2,
+    pageSize: 10,
     fields: "id,title,publishing_year,poster",
     sortOrder: "id desc",
   };
