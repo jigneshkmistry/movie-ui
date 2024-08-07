@@ -3,7 +3,7 @@ import { useLoginMutation } from "../../services/authApi";
 import { enqueueSnackbar } from "notistack";
 import { ErrorMessage } from "@hookform/error-message";
 import React from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
 import ButtonComponent from "../components/button";
 import InputField from "../components/inputField";
@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 const SignIn = () => {
   const router = useRouter();
   const { t } = useTranslation();
-  const [login] = useLoginMutation();
+  const [login, { isLoading: isUpdating }] = useLoginMutation();
   const {
     control,
     handleSubmit,
@@ -141,6 +141,7 @@ const SignIn = () => {
               title={t("Login")}
               onPress={handleSubmit(onSubmit)}
               btnContainerOverrideStyle="w-100"
+              isLoading={isUpdating}
             />
           </Col>
         </Row>

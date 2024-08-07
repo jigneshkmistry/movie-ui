@@ -5,6 +5,7 @@ const MovieCard = ({ title, year, imageSrc, onClick }) => {
     <div
       className="w-100 rounded shadow mb-5 overflow-hidden "
       onClick={onclick}
+      style={{ cursor: "pointer" }}
     >
       <img
         alt="movies"

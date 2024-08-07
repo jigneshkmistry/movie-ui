@@ -24,16 +24,17 @@ const ButtonComponent = ({
         btnContainerOverrideStyle || "border-0"
       }`}
     >
-      {isLoading && (
-        <div className="position-absolute top-0 bottom-0 start-0 end-0 d-flex flex-column justify-content-center align-items-center">
+      {isLoading ? (
+        <div className=" d-flex justify-content-center align-items-center gap-2">
           <span
             className="spinner-border spinner-border-sm"
             role="status"
             aria-hidden="true"
           ></span>
         </div>
+      ) : (
+        <span className={classNames({})}>{title}</span>
       )}
-      <span className={classNames({ invisible: isLoading })}>{title}</span>
     </button>
   );
 };

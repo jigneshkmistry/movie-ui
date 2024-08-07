@@ -5,7 +5,7 @@ import InputField from "../../components/inputField";
 import { ErrorMessage } from "@hookform/error-message";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Spinner } from "react-bootstrap";
 import { useForm, Controller } from "react-hook-form";
 import ProtectedRoute from "../../protected";
 import { useSnackbar } from "notistack";
@@ -26,8 +26,13 @@ const ModifyMovie = () => {
   const [fileData, setfileData] = useState(null);
   const poster = movieData?.poster;
 
-  const { control, handleSubmit, getValues, setValue, formState: { errors } }
-    = useForm({ mode: "onChange" });
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm({ mode: "onChange" });
 
   useEffect(() => {
     if (movieData) {
@@ -35,8 +40,20 @@ const ModifyMovie = () => {
       setValue("publishingYear", movieData?.publishing_year);
       setValue("id", movieData?.id);
     }
-  }, [movieData])
+  }, [movieData]);
 
+  if (isLoading) {
+    return (
+      <Container
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
+  }
 
   const handleImageUpload = (file_data) => {
     setfileData(file_data);
@@ -45,15 +62,16 @@ const ModifyMovie = () => {
   const onSubmit = async (data) => {
     let image_url = poster;
     if (fileData) {
-      image_url = await uploadMoviePoster(fileData)
+      image_url = await uploadMoviePoster(fileData);
     }
     try {
       await putMovies({
-        id: data.id, payload: {
+        id: data.id,
+        payload: {
           title: data.title,
           publishing_year: parseInt(data.publishingYear, 10),
-          poster: image_url
-        }
+          poster: image_url,
+        },
       }).unwrap();
       enqueueSnackbar("Movie successfully Updated", { variant: "success" });
       router.push("/movieList");
@@ -74,7 +92,7 @@ const ModifyMovie = () => {
       return poster_url;
     }
     return poster_url;
-  }
+  };
 
   return (
     <Container className="my-5 position-relative z-3">
@@ -122,9 +140,11 @@ const ModifyMovie = () => {
               rules={{
                 required: "This field is required",
                 validate: {
-                  isNumber: (value) => !isNaN(value) || 'Year must be a number',
-                  inRange: (value) => (value >= 1900 && value <= new Date().getFullYear()) || `Year must be between 1900 and ${new Date().getFullYear()}`
-                }
+                  isNumber: (value) => !isNaN(value) || "Year must be a number",
+                  inRange: (value) =>
+                    (value >= 1900 && value <= new Date().getFullYear()) ||
+                    `Year must be between 1900 and ${new Date().getFullYear()}`,
+                },
               }}
               render={({ field: { onChange, value } }) => (
                 <>

@@ -21,9 +21,14 @@ const MovieList = () => {
     sortOrder: "id desc",
   };
 
-  const { data: moviesData, error, isLoading } = useGetMoviesQuery(params);
+  const {
+    data: moviesData,
+    error,
+    isLoading,
+    isFetching,
+  } = useGetMoviesQuery(params);
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <Container
         className="d-flex justify-content-center align-items-center"
@@ -57,6 +62,7 @@ const MovieList = () => {
           <h4 className="py-4 d-flex align-items-center gap-2 pe-auto">
             {t("My movies")}{" "}
             <PlusCircle
+              style={{ cursor: "pointer" }}
               color="#fff"
               className="fs-6 pe-auto"
               onClick={() => router.push("/movieList/createMovie")}
@@ -90,24 +96,22 @@ const MovieList = () => {
       {totalMovies > 0 ? (
         <>
           <Row>
-            {moviesData.rows
-              // .slice(indexOfFirstMovie, indexOfLastMovie)
-              .map((movie, index) => (
-                <Col
-                  key={movie.id || index}
-                  lg={3}
-                  md={6}
-                  sm={6}
-                  xs={6}
-                  onClick={() => handlePosterClick(movie)}
-                >
-                  <MovieCard
-                    title={movie.title}
-                    year={movie.publishing_year}
-                    imageSrc={movie.poster}
-                  />
-                </Col>
-              ))}
+            {moviesData.rows.map((movie, index) => (
+              <Col
+                key={movie.id || index}
+                lg={3}
+                md={6}
+                sm={6}
+                xs={6}
+                onClick={() => handlePosterClick(movie)}
+              >
+                <MovieCard
+                  title={movie.title}
+                  year={movie.publishing_year}
+                  imageSrc={movie.poster}
+                />
+              </Col>
+            ))}
           </Row>
           <div className="pagination-wrapper bg-movies-primary">
             <Pagination className="justify-content-center mt-4">
@@ -117,7 +121,13 @@ const MovieList = () => {
                 as="span"
                 className="nav-button"
               >
-                <span>{t("Prev")}</span>
+                <span
+                  style={{
+                    color: currentPage === 1 ? "grey" : "",
+                  }}
+                >
+                  {t("Prev")}
+                </span>
               </Pagination.Prev>
               {[...Array(totalPages)].map((_, index) => (
                 <Pagination.Item
@@ -134,7 +144,11 @@ const MovieList = () => {
                 as="span"
                 className="nav-button"
               >
-                <span>{t("Next")}</span>
+                <span
+                  style={{ color: currentPage === totalPages ? "grey" : "" }}
+                >
+                  {t("Next")}
+                </span>
               </Pagination.Next>
             </Pagination>
           </div>
