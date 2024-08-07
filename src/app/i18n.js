@@ -27,6 +27,10 @@ const resources = {
       "Drop image here": "Drop image here",
       Update: "Update",
       Edit: "Edit",
+      "Loggedin Successfully": "Loggedin Successfully",
+      "Movie Created Successfully": "Movie Created Successfully",
+      "Movie Updated Successfully": "Movie Updated Successfully",
+      "Invalid Email Or Password": "Invalid Email Or Password",
     },
   },
   fr: {
@@ -52,6 +56,10 @@ const resources = {
       "Drop image here": "Déposez l'image ici",
       Update: "Mise à jour",
       Edit: "Modifier",
+      "Loggedin Successfully": "Connecté avec succès",
+      "Movie Created Successfully": "Film créé avec succès",
+      "Movie Updated Successfully": "Film mis à jour avec succès",
+      "Invalid Email Or Password": "Email ou mot de passe invalide",
     },
   },
 };

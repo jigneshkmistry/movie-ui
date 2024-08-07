@@ -21,7 +21,7 @@ const ModifyMovie = () => {
   const { t } = useTranslation();
   const { data: movieData, isLoading } = useGetMovieByIdQuery({ id });
   const { enqueueSnackbar } = useSnackbar();
-  const [putMovies] = usePutMoviesMutation();
+  const [putMovies, { isLoading: isUpdating }] = usePutMoviesMutation();
   const [postImageUrl] = usePostImageUrlMutation();
   const [fileData, setfileData] = useState(null);
   const poster = movieData?.poster;
@@ -41,6 +41,19 @@ const ModifyMovie = () => {
       setValue("id", movieData?.id);
     }
   }, [movieData]);
+
+  if (isUpdating) {
+    return (
+      <Container
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -73,7 +86,7 @@ const ModifyMovie = () => {
           poster: image_url,
         },
       }).unwrap();
-      enqueueSnackbar("Movie successfully Updated", { variant: "success" });
+      enqueueSnackbar(t("Movie Updated Successfully"), { variant: "success" });
       router.push("/movieList");
     } catch (error) {
       enqueueSnackbar(error.data.message, { variant: "error" });

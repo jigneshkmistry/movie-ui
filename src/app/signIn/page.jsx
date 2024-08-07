@@ -43,11 +43,11 @@ const SignIn = () => {
           if (typeof window !== "undefined") {
             window.localStorage.setItem("access-token", res.AccessToken);
           }
-          enqueueSnackbar("Login successfully", { variant: "success" });
+          enqueueSnackbar(t("Loggedin Successfully"), { variant: "success" });
           router.push("/movieList");
         }
       } catch (error) {
-        enqueueSnackbar("Invalid email or password", { variant: "error" });
+        enqueueSnackbar(t("Invalid Email Or Password"), { variant: "error" });
       }
     }
   };
